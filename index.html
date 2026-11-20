@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>Yamma Yamma – Shaan (1980) Presentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Poppins:wght@500;700;800&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Animated 1980s disco background -->
+  <div class="disco-bg" aria-hidden="true">
+    <span class="beam b1"></span><span class="beam b2"></span><span class="beam b3"></span>
+  </div>
+
+  <div id="app">
+    <header class="title-bar">
+      <h1>✦ YAMMA YAMMA ✦</h1>
+      <p>Shaan (1980) · Song &amp; Dance Presentation</p>
+    </header>
+
+    <!-- Video stage -->
+    <main class="stage-wrap">
+      <div id="stage" class="stage paused">
+        <div id="player"></div>
+
+        <!-- Transparent shield: keeps keyboard focus on the page and toggles play/pause on click -->
+        <div id="clickShield" class="click-shield" title="Click to Play / Pause"></div>
+
+        <!-- Caption overlay (never blocks clicks) -->
+        <div id="bannerLayer" class="banner-layer" aria-live="polite"></div>
+
+        <div id="errorBox" class="error-box" hidden></div>
+        <div id="presHint" class="pres-hint">Space: Play/Pause · N/P: Next/Prev caption · F: Fullscreen · R: Restart · Esc: Exit</div>
+      </div>
+    </main>
+
+    <!-- Controls (hidden in presentation mode) -->
+    <section class="controls" id="controls">
+      <button id="btnPlay">▶ Play</button>
+      <button id="btnPause">❚❚ Pause</button>
+      <button id="btnRestart">↺ Restart</button>
+      <div class="seek">
+        <span id="timeNow">0:00</span>
+        <div class="seek-track">
+          <input type="range" id="seekBar" min="0" max="100" step="0.1" value="0" aria-label="Seek">
+          <div id="cueMarks" class="cue-marks"></div>
+        </div>
+        <span id="timeTotal">0:00</span>
+      </div>
+      <button id="btnPresent" class="primary">⛶ FULLSCREEN PRESENTATION</button>
+    </section>
+
+    <!-- Admin / Preview panel (hidden in presentation mode) -->
+    <section class="admin" id="adminPanel">
+      <h2>Caption Preview Panel</h2>
+      <p class="hint">Edit timings in the <code>captions</code> array at the top of <code>script.js</code>. Preview plays a banner without waiting for the video. Click a row, a gold marker on the seek bar, or the caption itself to jump there. N / P steps through captions.</p>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>#</th><th>Caption</th><th>Start</th><th>Duration</th><th>Style</th><th></th></tr>
+          </thead>
+          <tbody id="captionRows"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
