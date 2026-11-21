@@ -100,7 +100,56 @@ const WORD_STAGGER = 0.09;
 function clearBanner() {
   if (current) current.el.remove();
   current = null;
+  dom.layer.querySelectorAll(".fx").forEach((n) => n.remove());
   dom.layer.className = "banner-layer";
+}
+
+/** Extra screen effects per caption style. */
+const FX = {
+  grandOpen:     { flash: true, rays: true },
+  popUp:         { shake: true, flash: "red" },
+  slideDown:     { streak: true },
+  slideUp:       { streak: true },
+  fadeDramatic:  { vignette: true },
+  bounce:        { shake: true, confetti: 40 },
+  warmGlow:      { glow: true },
+  grandFarewell: { flash: true, rays: true, confetti: 70 },
+  adieu:         { flash: true, rays: true, confetti: 90 }
+};
+
+const CONFETTI_COLORS = ["#ffcc33", "#fff3b0", "#e0267e", "#d3122b", "#8a4dff", "#ffffff"];
+
+function stageFx(c) {
+  const fx = FX[c.animation] || {};
+  const add = (cls) => {
+    const n = document.createElement("div");
+    n.className = `fx ${cls}`;
+    dom.layer.appendChild(n);
+    return n;
+  };
+
+  if (fx.flash) add(`fx-flash${fx.flash === "red" ? " red" : ""}`);
+  if (fx.rays) add("fx-rays");
+  if (fx.vignette) add("fx-vignette");
+  if (fx.glow) add("fx-glow");
+  if (fx.streak) add(`fx-streak${c.animation === "slideUp" ? " up" : ""}`);
+
+  if (fx.shake) {
+    dom.stage.classList.remove("shake");
+    void dom.stage.offsetWidth;            // restart the animation
+    dom.stage.classList.add("shake");
+  }
+
+  for (let i = 0; i < (fx.confetti || 0); i++) {
+    const p = add("fx-confetti");
+    p.style.left = `${Math.random() * 100}%`;
+    p.style.background = CONFETTI_COLORS[i % CONFETTI_COLORS.length];
+    p.style.setProperty("--drift", `${(Math.random() - 0.5) * 18}cqw`);
+    p.style.setProperty("--spin", `${(Math.random() < 0.5 ? -1 : 1) * (360 + Math.random() * 720)}deg`);
+    p.style.animationDuration = `${2.2 + Math.random() * 1.8}s`;
+    p.style.animationDelay = `${Math.random() * 0.8}s`;
+    if (i % 3 === 0) p.style.borderRadius = "50%";
+  }
 }
 
 /** Split caption text into word spans so each word can animate in on its own. */
@@ -111,6 +160,8 @@ function fillWords(el, text, skipIntro) {
     w.className = "w";
     w.textContent = word;                   // textContent: safe, no HTML injection
     w.style.animationDelay = skipIntro ? "0s" : `${0.15 + i * WORD_STAGGER}s`;
+    w.style.setProperty("--tilt", `${(i % 2 ? 1 : -1) * (4 + (i * 7) % 6)}deg`);
+    w.style.setProperty("--side", i % 2 ? "1" : "-1");
     el.appendChild(w);
   });
 }
@@ -142,6 +193,10 @@ function showBanner(c, remaining) {
   fillWords(text, c.text, joinedLate);
   el.appendChild(text);
 
+  const shine = document.createElement("span");
+  shine.className = "banner-shine";
+  el.appendChild(shine);
+
   const timer = document.createElement("span");
   timer.className = "banner-timer";
   const fill = document.createElement("i");
@@ -154,7 +209,7 @@ function showBanner(c, remaining) {
   dom.layer.appendChild(el);
   current = { id: c.id, el, fill, leaving: false };
   setTimer(c, remaining);
-  if (!joinedLate) burstSparkles(el);
+  if (!joinedLate) { burstSparkles(el); stageFx(c); }
 
   // If we landed inside the exit window (e.g. after a seek), start leaving right away.
   if (remaining <= exitLead(c)) startLeaving(c, remaining);

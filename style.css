@@ -197,22 +197,167 @@ body.presentation .stage {
 /* Pause caption animations whenever the video is not playing */
 .stage.paused .banner,
 .stage.paused .banner .w,
-.stage.paused .banner .spark { animation-play-state: paused; }
+.stage.paused .banner .spark,
+.stage.paused .banner-shine::before,
+.stage.paused .fx { animation-play-state: paused; }
 
 /* ----- Interactive layer shared by every caption ----- */
 .banner { position: relative; pointer-events: auto; cursor: pointer; }
 .banner:hover { outline: 2px dashed rgba(255, 255, 255, .45); outline-offset: 4px; }
 
+.banner-text { display: inline-block; perspective: 600px; position: relative; z-index: 1; }
+.banner:hover .banner-text { animation: textFloat .8s ease-in-out infinite alternate; }
+@keyframes textFloat { to { translate: 0 -.08em; scale: 1.03; } }
+
+/* Default word entrance: 3D flip up from below */
 .banner .w {
   display: inline-block;
-  animation: wordIn .45s cubic-bezier(.34, 1.56, .64, 1) both;
+  transform-origin: 50% 100%;
+  animation: wordFlip .6s cubic-bezier(.2, 1.4, .4, 1) both;
 }
-@keyframes wordIn {
-  from { opacity: 0; translate: 0 .5em; scale: .6; filter: blur(4px); }
-  to   { opacity: 1; translate: 0 0;   scale: 1;  filter: none; }
+@keyframes wordFlip {
+  0%   { opacity: 0; transform: rotateX(-95deg) translateY(.3em); filter: blur(3px); }
+  60%  { opacity: 1; filter: none; }
+  100% { opacity: 1; transform: rotateX(0) translateY(0); }
 }
-.banner:hover .w { animation: wordIn .45s cubic-bezier(.34, 1.56, .64, 1) both, wordWave .6s ease-in-out infinite alternate; }
-@keyframes wordWave { to { translate: 0 -.12em; } }
+
+/* Pop-ups: each word slams down like a rubber stamp */
+.banner.anim-popUp .w { animation: wordStamp .42s cubic-bezier(.2, 1.8, .4, 1) both; }
+@keyframes wordStamp {
+  0%   { opacity: 0; transform: scale(3.2) rotate(var(--tilt)); filter: blur(6px); }
+  60%  { opacity: 1; transform: scale(.9) rotate(0); filter: none; }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Slides: words fly in from alternating sides */
+.banner.anim-slideDown .w,
+.banner.anim-slideUp .w { animation: wordFly .55s cubic-bezier(.2, .9, .3, 1.2) both; }
+@keyframes wordFly {
+  from { opacity: 0; transform: translateX(calc(var(--side) * 2.5em)) skewX(calc(var(--side) * -18deg)); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Dramatic: words emerge out of a blur, spaced apart */
+.banner.anim-fadeDramatic .w { animation: wordDream 1.4s ease-out both; }
+@keyframes wordDream {
+  from { opacity: 0; filter: blur(12px); transform: scale(1.4); letter-spacing: .3em; }
+  to   { opacity: 1; filter: none; transform: none; letter-spacing: normal; }
+}
+
+/* Bounce: words drop in from above and land */
+.banner.anim-bounce .w { animation: wordDrop .7s cubic-bezier(.3, 1.6, .5, 1) both; }
+@keyframes wordDrop {
+  0%   { opacity: 0; transform: translateY(-2.2em) rotate(var(--tilt)); }
+  50%  { opacity: 1; transform: translateY(.15em) rotate(0); }
+  100% { opacity: 1; transform: none; }
+}
+
+/* Warm: words rise softly with a glow */
+.banner.anim-warmGlow .w { animation: wordRise 1s ease-out both; }
+@keyframes wordRise {
+  from { opacity: 0; transform: translateY(.6em); text-shadow: 0 0 1em #ffb347; }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Grand captions: words zoom out of the screen toward the viewer */
+.banner.anim-grandOpen .w,
+.banner.anim-grandFarewell .w { animation: wordZoom .8s cubic-bezier(.2, 1, .3, 1) both; }
+@keyframes wordZoom {
+  0%   { opacity: 0; transform: translateZ(-400px) scale(.3); filter: blur(6px) brightness(3); }
+  70%  { opacity: 1; filter: brightness(1.4); }
+  100% { opacity: 1; transform: none; filter: none; }
+}
+
+/* Light sweep across every caption */
+.banner-shine {
+  position: absolute; inset: 0; border-radius: inherit; overflow: hidden;
+  pointer-events: none; z-index: 2;
+}
+.banner-shine::before {
+  content: ""; position: absolute; top: -20%; bottom: -20%; width: 35%; left: -60%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .55), transparent);
+  transform: skewX(-20deg);
+  animation: shineSweep 3.2s ease-in-out .6s infinite;
+}
+@keyframes shineSweep {
+  0%   { left: -60%; }
+  35%  { left: 130%; }
+  100% { left: 130%; }
+}
+.banner.anim-adieu .banner-shine { display: none; }
+
+/* Neon flicker on the pop-up border once it has landed (applied in the popUp rule below) */
+@keyframes neonFlicker {
+  0%, 18%, 22%, 25%, 53%, 57%, 100% {
+    box-shadow: 0 .3em 1em rgba(0, 0, 0, .7), 0 0 .6em #ff4d6d, 0 0 1.6em #ff4d6d, inset 0 0 .6em rgba(255, 120, 150, .5);
+  }
+  20%, 24%, 55% { box-shadow: 0 .3em 1em rgba(0, 0, 0, .7); }
+}
+
+/* ----- Screen effects (created per caption in JS) ----- */
+.fx { position: absolute; pointer-events: none; }
+
+.fx-flash {
+  inset: -10%; z-index: -1;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 240, 190, .85), rgba(255, 204, 51, .35) 35%, transparent 70%);
+  animation: fxFlash .9s ease-out both;
+}
+.fx-flash.red { background: radial-gradient(circle at 50% 50%, rgba(255, 90, 120, .6), rgba(211, 18, 43, .25) 40%, transparent 70%); animation-duration: .5s; }
+@keyframes fxFlash { 0% { opacity: 0; } 15% { opacity: 1; } 100% { opacity: 0; } }
+
+.fx-rays {
+  left: 50%; top: 50%; width: 140cqw; aspect-ratio: 1; z-index: -1;
+  translate: -50% -50%;
+  background: repeating-conic-gradient(from 0deg, rgba(255, 220, 120, .22) 0deg 6deg, transparent 6deg 18deg);
+  -webkit-mask: radial-gradient(circle, #000 0%, transparent 55%);
+          mask: radial-gradient(circle, #000 0%, transparent 55%);
+  animation: fxRaysIn 1.2s ease-out both, fxRaysSpin 18s linear infinite;
+}
+@keyframes fxRaysIn { from { opacity: 0; scale: .4; } to { opacity: 1; scale: 1; } }
+@keyframes fxRaysSpin { to { rotate: 360deg; } }
+
+.fx-vignette {
+  inset: 0; z-index: -1;
+  background: radial-gradient(ellipse at center, transparent 30%, rgba(0, 0, 0, .75) 100%);
+  animation: fxFade 1.6s ease-out both;
+}
+.fx-glow {
+  inset: 0; z-index: -1;
+  background: radial-gradient(ellipse at 50% 80%, rgba(255, 170, 70, .35), transparent 65%);
+  animation: fxFade 1.6s ease-out both, fxBreathe 3s ease-in-out 1.6s infinite alternate;
+}
+@keyframes fxFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fxBreathe { to { opacity: .55; } }
+
+.fx-streak {
+  left: -30%; top: 0; bottom: 0; width: 30%; z-index: -1;
+  background: linear-gradient(90deg, transparent, rgba(224, 38, 126, .45), rgba(255, 255, 255, .6), transparent);
+  filter: blur(8px); transform: skewX(-25deg);
+  animation: fxStreak .8s ease-out both;
+}
+.fx-streak.up { animation-direction: reverse; }
+@keyframes fxStreak { from { left: -30%; opacity: 1; } to { left: 120%; opacity: 0; } }
+
+.fx-confetti {
+  top: -4%; width: .9cqw; height: 1.5cqw; min-width: 5px; min-height: 8px; z-index: 5;
+  border-radius: 2px;
+  animation: fxConfetti 3s cubic-bezier(.3, .6, .6, 1) both;
+}
+@keyframes fxConfetti {
+  0%   { opacity: 0; transform: translate(0, 0) rotate(0); }
+  8%   { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--drift), 62cqw) rotate(var(--spin)); }
+}
+
+/* Short screen shake for punchy captions */
+.stage.shake #player { animation: fxShake .45s cubic-bezier(.36, .07, .19, .97) both; }
+@keyframes fxShake {
+  10%, 90% { transform: translate(-2px, 1px); }
+  20%, 80% { transform: translate(4px, -2px); }
+  30%, 50%, 70% { transform: translate(-6px, 2px) scale(1.01); }
+  40%, 60% { transform: translate(6px, -1px) scale(1.01); }
+}
 
 /* Gradient-text captions need the gradient on each word span too */
 .banner.anim-adieu .w,
@@ -278,7 +423,7 @@ body.presentation .stage {
   border-color: #ffe27a;
   font-family: 'Poppins', sans-serif; font-weight: 800; text-transform: uppercase;
   font-size: clamp(13px, 2.9cqw, 56px);
-  animation: popUpIn .55s cubic-bezier(.34, 1.56, .64, 1) both;
+  animation: popUpIn .55s cubic-bezier(.34, 1.56, .64, 1) both, neonFlicker 2.4s linear .6s infinite;
 }
 @keyframes popUpIn {
   0%   { opacity: 0; scale: .2; rotate: -6deg; }
@@ -392,6 +537,7 @@ body.presentation .stage {
 
 @media (prefers-reduced-motion: reduce) {
   .beam { animation: none; }
-  .banner .w, .banner:hover .w { animation: none; }
-  .spark { display: none; }
+  .banner .w, .banner:hover .banner-text, .banner-shine::before { animation: none !important; }
+  .spark, .fx-confetti, .fx-rays, .fx-streak { display: none; }
+  .stage.shake #player { animation: none; }
 }
