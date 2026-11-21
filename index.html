@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Yamma Yamma – Shaan (1980) Presentation</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,7 +24,7 @@
     <!-- Video stage -->
     <main class="stage-wrap">
       <div id="stage" class="stage paused">
-        <div id="player"></div>
+        <video id="player" preload="auto" playsinline></video>
 
         <!-- Transparent shield: keeps keyboard focus on the page and toggles play/pause on click -->
         <div id="clickShield" class="click-shield" title="Click to Play / Pause"></div>

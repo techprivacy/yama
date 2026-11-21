@@ -71,23 +71,13 @@ html, body {
   border: 3px solid var(--gold);
   border-radius: 14px;
   box-shadow: 0 0 0 3px var(--black), 0 0 40px rgba(255, 204, 51, .35), 0 0 90px rgba(90, 26, 140, .6);
-  /* A radius or overflow clip on the iframe itself makes Chromium rasterize
-     the cross-origin player and the picture goes soft. Keep the radius on the frame only. */
-  overflow: visible;
+  overflow: hidden;
 }
-.player-fit { position: absolute; inset: 0; overflow: hidden; }
-.stage iframe, #player {
-  position: absolute; top: 0; left: 0; border: 0;
-  border-radius: 0; /* rounding this is what blurs the picture */
+#player {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: contain; background: #000; display: block;
 }
-.poster {
-  position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%;
-  object-fit: cover; pointer-events: none; border-radius: 0;
-}
-.stage.engaged .poster { display: none; }
-.click-shield { position: absolute; inset: 0; z-index: 2; cursor: pointer; pointer-events: none; }
-/* After the first play, this layer toggles pause. Before that, clicks reach YouTube's own button. */
-.stage.engaged .click-shield { pointer-events: auto; }
+.click-shield { position: absolute; inset: 0; z-index: 2; cursor: pointer; }
 
 .error-box {
   position: absolute; inset: 0; z-index: 10; display: grid; place-items: center;
@@ -139,9 +129,11 @@ button.primary { background: linear-gradient(180deg, var(--red), #8d0b1d); borde
   white-space: nowrap; max-width: 320px; overflow: hidden; text-overflow: ellipsis;
   padding: 5px 10px; border-radius: 6px; font: 600 .75rem 'Poppins', sans-serif;
   color: var(--cream); background: rgba(20, 8, 34, .95); border: 1px solid var(--gold);
-  opacity: 0; pointer-events: none; transition: opacity .15s;
+  display: none; pointer-events: none;
 }
-.cue-mark:hover .cue-tip, .cue-mark:focus-visible .cue-tip { opacity: 1; }
+.cue-mark:hover .cue-tip, .cue-mark:focus-visible .cue-tip { display: block; }
+.cue-mark.near-start .cue-tip { left: 0; transform: scaleY(.56); transform-origin: bottom left; }
+.cue-mark.near-end .cue-tip { left: auto; right: 0; transform: scaleY(.56); transform-origin: bottom right; }
 
 /* ---------- Admin panel ---------- */
 .admin {
@@ -184,7 +176,7 @@ body.presentation .stage {
 }
 .banner-layer.pos-top    { align-items: flex-start; }
 .banner-layer.pos-center { align-items: center; }
-.banner-layer.pos-bottom { align-items: flex-end; padding-bottom: 7cqw; } /* clear of YouTube's bottom UI */
+.banner-layer.pos-bottom { align-items: flex-end; padding-bottom: 7cqw; }
 
 .banner {
   max-width: 88%;

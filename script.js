@@ -7,7 +7,7 @@
 
 /* ---------- SECTION 1: CONFIGURATION ---------- */
 
-const VIDEO_ID = "pk3JWY6KsmQ";   // https://www.youtube.com/watch?v=pk3JWY6KsmQ
+const VIDEO_SRC = "video.mp4";   // local file next to index.html
 
 /**
  * Caption schedule.
@@ -19,21 +19,34 @@ const VIDEO_ID = "pk3JWY6KsmQ";   // https://www.youtube.com/watch?v=pk3JWY6KsmQ
  *   animation "grandOpen" | "popUp" | "slideDown" | "slideUp" | "fadeDramatic"
  *             | "bounce" | "warmGlow" | "grandFarewell" | "adieu"
  *
- * Sample timings: 10 s apart, 5 s each. Replace with real values later.
- * Keep captions in chronological order of `start` and avoid overlaps.
+ * Sample timings: spread evenly over the 5:25 video, 13 s apart, 7 s each.
+ * Adjust `start` to match the song. Keep captions in chronological order and avoid overlaps.
  */
 const captions = [
-  { id: 1,  text: "Defence Diplomacy Deliberates",                                 start: 10,  duration: 5, position: "top",    animation: "grandOpen" },
-  { id: 2,  text: "Wish I could erect a Nakabandi here!",                          start: 20,  duration: 5, position: "bottom", animation: "popUp" },
-  { id: 3,  text: "Wish I could seal the border of NDC!",                          start: 30,  duration: 5, position: "top",    animation: "popUp" },
-  { id: 4,  text: "Wish I could create a choke point!",                            start: 40,  duration: 5, position: "bottom", animation: "popUp" },
-  { id: 5,  text: "Wish I could spread lots of regulatory cholesterol!",           start: 50,  duration: 5, position: "top",    animation: "popUp" },
-  { id: 6,  text: "Wish I could order quarantine & curfew!",                       start: 60,  duration: 5, position: "bottom", animation: "popUp" },
-  { id: 7,  text: "Wish this never ends like ....",                                start: 70,  duration: 5, position: "center", animation: "fadeDramatic" },
-  { id: 8,  text: "Chalo-Chalo – Khel Khatam... Paisaa Hajam!",                    start: 80,  duration: 5, position: "bottom", animation: "bounce" },
-  { id: 9,  text: "Wish we keep beautiful memories for life!",                     start: 90,  duration: 5, position: "bottom", animation: "warmGlow" },
-  { id: 10, text: "Let's depart with strategic agency to sing and dance forever!", start: 100, duration: 5, position: "center", animation: "grandFarewell" },
-  { id: 11, text: "Adieu!",                                                        start: 110, duration: 6, position: "center", animation: "adieu" }
+  { id: 1,  text: "As the NDC-66 comes to an end",                                 start: 8,   duration: 7,  position: "top",    animation: "grandOpen" },
+  { id: 2,  text: "With the blessings of great Kautilya,",                         start: 21,  duration: 7,  position: "bottom", animation: "warmGlow" },
+  { id: 3,  text: "Defence diplomacy deliberated",                                 start: 34,  duration: 7,  position: "top",    animation: "slideDown" },
+  { id: 4,  text: "…and deliberates rigorously",                                   start: 47,  duration: 7,  position: "bottom", animation: "slideUp" },
+  { id: 5,  text: "If the course can be extended",                                 start: 60,  duration: 7,  position: "top",    animation: "slideDown" },
+  { id: 6,  text: "With serious suggestions and wish list",                        start: 73,  duration: 7,  position: "bottom", animation: "slideUp" },
+  { id: 7,  text: "Wish I could erect a Nakabandi here!",                          start: 86,  duration: 7,  position: "top",    animation: "popUp" },
+  { id: 8,  text: "Wish I could seal the border of NDC!",                          start: 99,  duration: 7,  position: "bottom", animation: "popUp" },
+  { id: 9,  text: "Wish I could create a choke point!",                            start: 112, duration: 7,  position: "top",    animation: "popUp" },
+  { id: 10, text: "Wish I could spread lots of regulatory cholesterol!",           start: 125, duration: 7,  position: "bottom", animation: "popUp" },
+  { id: 11, text: "Wish I could order quarantine & curfew!",                       start: 138, duration: 7,  position: "top",    animation: "popUp" },
+  { id: 12, text: "Wish this never ends like ....",                                start: 151, duration: 7,  position: "center", animation: "fadeDramatic" },
+  { id: 13, text: "…but sadly…",                                                   start: 164, duration: 7,  position: "center", animation: "fadeDramatic" },
+  { id: 14, text: "“Chalo-Chalo” – Khel Khatam… Paisaa Hajam!",                    start: 177, duration: 7,  position: "bottom", animation: "bounce" },
+  { id: 15, text: "But nevertheless…",                                             start: 190, duration: 7,  position: "center", animation: "fadeDramatic" },
+  { id: 16, text: "Wish we keep beautiful memories for life",                      start: 203, duration: 7,  position: "bottom", animation: "warmGlow" },
+  { id: 17, text: "Let's depart with strategic agency to sing and dance forever",  start: 216, duration: 7,  position: "center", animation: "grandFarewell" },
+  { id: 18, text: "To keep meeting",                                               start: 229, duration: 7,  position: "bottom", animation: "bounce" },
+  { id: 19, text: "And rising",                                                    start: 242, duration: 7,  position: "bottom", animation: "slideUp" },
+  { id: 20, text: "And shining",                                                   start: 255, duration: 7,  position: "top",    animation: "grandOpen" },
+  { id: 21, text: "Be best friends and buddies",                                   start: 268, duration: 7,  position: "bottom", animation: "warmGlow" },
+  { id: 22, text: "Never to say goodbye",                                          start: 281, duration: 7,  position: "center", animation: "fadeDramatic" },
+  { id: 23, text: "Only adieu for now",                                            start: 294, duration: 8,  position: "center", animation: "adieu" },
+  { id: 24, text: "To meet soon again",                                            start: 307, duration: 12, position: "center", animation: "grandFarewell" }
 ];
 
 /** Seconds before a caption ends when its exit animation starts (per animation; default below). */
@@ -53,7 +66,7 @@ const dom = {
   seek: $("seekBar"), marks: $("cueMarks"), timeNow: $("timeNow"), timeTotal: $("timeTotal"), app: $("app")
 };
 
-let player = null;
+const video = $("player");
 let playerReady = false;
 let seeking = false;           // true while the user drags the seek bar
 let previewTimers = [];        // timers for admin preview (independent of video)
@@ -166,21 +179,20 @@ function startLeaving(c, remaining) {
 /* ---------- SECTION 5: SYNC ENGINE (driven by the video clock) ---------- */
 
 /**
- * Called every POLL_MS. Reads the REAL playback time from the YouTube player,
+ * Called every POLL_MS. Reads the REAL playback time from the video,
  * so pausing freezes caption timing and seeking resolves to the correct caption.
  */
 function tick() {
-  if (!playerReady || previewing || typeof player.getCurrentTime !== "function") return;
+  if (!playerReady || previewing) return;
 
-  const t = player.getCurrentTime();
+  const t = video.currentTime;
 
   // UI: time + seek bar
   dom.timeNow.textContent = fmt(t);
   if (!seeking) dom.seek.value = t;
 
   // Pause banner CSS animations whenever the video isn't playing
-  const state = player.getPlayerState();
-  dom.stage.classList.toggle("paused", state !== YT.PlayerState.PLAYING && state !== YT.PlayerState.BUFFERING);
+  dom.stage.classList.toggle("paused", video.paused || video.ended);
 
   const active = captionAt(t);
 
@@ -224,13 +236,14 @@ function buildAdminTable() {
 
 /** Gold markers on the seek bar, one per caption. Click one to jump there. */
 function buildCueMarks() {
-  const d = playerReady ? player.getDuration() : 0;
+  const d = playerReady ? video.duration : 0;
   dom.marks.innerHTML = "";
   if (!d) return;
   captions.forEach((c) => {
     const m = document.createElement("button");
     m.type = "button";
-    m.className = "cue-mark";
+    const pos = c.start / d;
+    m.className = `cue-mark${pos < 0.2 ? " near-start" : pos > 0.75 ? " near-end" : ""}`;
     m.dataset.id = c.id;
     m.style.left = `${(c.start / d) * 100}%`;
     m.style.width = `${Math.max(0.6, (c.duration / d) * 100)}%`;
@@ -249,15 +262,15 @@ function jumpToCaption(c) {
   if (!playerReady) { previewCaption(c); return; }
   stopPreviewAndClear();
   clearBanner();
-  player.seekTo(c.start, true);
-  player.playVideo();
+  video.currentTime = c.start;
+  video.play();
   setTimeout(tick, 150);
 }
 
 /** Move to the next (+1) or previous (-1) caption relative to the current time. */
 function stepCaption(dir) {
   if (!playerReady) return;
-  const t = player.getCurrentTime();
+  const t = video.currentTime;
   const target = dir > 0
     ? captions.find((c) => c.start > t + 0.25)
     : [...captions].reverse().find((c) => c.start < t - 1);
@@ -296,12 +309,12 @@ function previewCaption(c) {
 
 /* ---------- SECTION 7: PLAYER CONTROLS ---------- */
 
-function play()    { if (playerReady) { stopPreviewAndClear(); player.playVideo(); } }
-function pause()   { if (playerReady) player.pauseVideo(); }
-function restart() { if (playerReady) { stopPreviewAndClear(); player.seekTo(0, true); player.playVideo(); } }
+function play()    { if (playerReady) { stopPreviewAndClear(); video.play(); } }
+function pause()   { if (playerReady) video.pause(); }
+function restart() { if (playerReady) { stopPreviewAndClear(); video.currentTime = 0; video.play(); } }
 function togglePlay() {
   if (!playerReady) return;
-  player.getPlayerState() === YT.PlayerState.PLAYING ? pause() : play();
+  video.paused || video.ended ? play() : pause();
 }
 function stopPreviewAndClear() { if (previewing) { stopPreview(); clearBanner(); } }
 
@@ -335,139 +348,32 @@ function setPresentation(on) {
 
 function onFullscreenChange() { setPresentation(inFullscreen()); }
 
-/* ---------- SECTION 9: YOUTUBE PLAYER ---------- */
-
-// Load the IFrame API
-(function loadYouTubeAPI() {
-  const s = document.createElement("script");
-  s.src = "https://www.youtube.com/iframe_api";
-  document.head.appendChild(s);
-})();
-
-/**
- * Cursor's preview stretches the YouTube frame, which softens the picture.
- * Render the player at device pixels, then scale it back to the stage.
- */
-function fitPlayer() {
-  if (!playerReady || typeof player.getIframe !== "function") return;
-  const iframe = player.getIframe();
-  if (!iframe) return;
-  const w = dom.stage.clientWidth;
-  const h = dom.stage.clientHeight;
-  if (w < 200 || h < 200) return;
-  const dpr = window.devicePixelRatio || 1;
-  const pw = Math.round(w * dpr);
-  const ph = Math.round(h * dpr);
-  if (iframe.dataset.pw === String(pw) && iframe.dataset.ph === String(ph)) return;
-  iframe.dataset.pw = String(pw);
-  iframe.dataset.ph = String(ph);
-  if (typeof player.setSize === "function") player.setSize(pw, ph);
-  iframe.style.width = pw + "px";
-  iframe.style.height = ph + "px";
-  iframe.style.transformOrigin = "0 0";
-  iframe.style.transform = dpr === 1 ? "" : `scale(${1 / dpr})`;
-}
-
-// Called automatically by the YouTube API when it's ready (must be global)
-window.onYouTubeIframeAPIReady = function () {
-  const frame = document.getElementById("player");
-  const iframe = document.createElement("iframe");
-  iframe.id = "player";
-  iframe.title = "Yamma Yamma";
-  iframe.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share");
-  // YouTube rejects the embed (error 153) unless the iframe sends a referrer.
-  iframe.referrerPolicy = "strict-origin-when-cross-origin";
-  const vars = { controls: "0", disablekb: "1", rel: "0", modestbranding: "1", playsinline: "1", fs: "0", iv_load_policy: "3", enablejsapi: "1", vq: "hd720" };
-  if (location.protocol === "http:" || location.protocol === "https:") vars.origin = location.origin;
-  iframe.src = `https://www.youtube.com/embed/${VIDEO_ID}?${new URLSearchParams(vars)}`;
-  const fit = document.createElement("div");
-  fit.className = "player-fit";
-  frame.replaceWith(fit);
-  fit.appendChild(iframe);
-
-  // The API sometimes builds its own iframe. Give that frame a referrer too,
-  // before its src is set, or YouTube answers with error 153.
-  const create = document.createElement.bind(document);
-  document.createElement = function (tag, options) {
-    const el = create(tag, options);
-    if (String(tag).toLowerCase() === "iframe") {
-      el.referrerPolicy = "strict-origin-when-cross-origin";
-      if (!el.getAttribute("allow")) {
-        el.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share");
-      }
-    }
-    return el;
-  };
-  try {
-    player = new YT.Player(iframe, { events: { onReady, onStateChange, onError } });
-  } finally {
-    document.createElement = create;
-  }
-};
-
-/** YouTube's own preview image is a small thumbnail stretched over the stage. Use the full-size still instead. */
-function mountSharpPoster() {
-  const img = document.createElement("img");
-  img.className = "poster";
-  img.alt = "";
-  const sources = ["maxresdefault", "sddefault", "hqdefault"].map(
-    (name) => `https://i.ytimg.com/vi/${VIDEO_ID}/${name}.jpg`
-  );
-  let i = 0;
-  const step = () => {
-    i += 1;
-    if (i < sources.length) img.src = sources[i];
-  };
-  img.addEventListener("error", step);
-  img.addEventListener("load", () => {
-    // maxresdefault 404s as a 120px placeholder on some videos
-    if (img.naturalWidth > 0 && img.naturalWidth <= 120) step();
-  });
-  img.src = sources[0];
-  dom.stage.insertBefore(img, dom.shield);
-}
+/* ---------- SECTION 9: VIDEO PLAYER ---------- */
 
 function onReady() {
+  if (playerReady) return;
   playerReady = true;
-  const node = player.getIframe && player.getIframe();
-  if (node) {
-    node.referrerPolicy = "strict-origin-when-cross-origin";
-    node.style.borderRadius = "0";
-  }
-  if (typeof player.setPlaybackQualityRange === "function") player.setPlaybackQualityRange("hd720", "highres");
-  else if (typeof player.setPlaybackQuality === "function") player.setPlaybackQuality("hd720");
-  const d = player.getDuration() || 0;
+  const d = video.duration || 0;
   dom.seek.max = d || 100;
   dom.timeTotal.textContent = fmt(d);
   buildCueMarks();
-  fitPlayer();
-  if (typeof ResizeObserver !== "undefined") new ResizeObserver(fitPlayer).observe(dom.stage);
-  else window.addEventListener("resize", fitPlayer);
   setInterval(tick, POLL_MS);
 }
 
-function onStateChange(e) {
-  // Duration is sometimes only known after playback starts
-  if (e.data === YT.PlayerState.PLAYING) {
-    dom.stage.classList.add("engaged"); // further clicks stay on our shield, not the iframe
-    const d = player.getDuration() || 0;
-    if (d && Number(dom.seek.max) !== d) { dom.seek.max = d; dom.timeTotal.textContent = fmt(d); buildCueMarks(); }
-  }
-  if (e.data === YT.PlayerState.ENDED) { clearBanner(); highlightRow(null); }
-  tick(); // refresh immediately on any state change (pause/seek/resume)
+function onError() {
+  dom.error.hidden = false;
+  dom.error.textContent =
+    `Could not load "${VIDEO_SRC}". Keep it in the same folder as index.html and open the page from a local web address.`;
 }
 
-function onError(e) {
-  const reasons = { 2: "Invalid video ID.", 5: "HTML5 player error.", 100: "Video not found or private.",
-                    101: "The owner disabled embedding for this video.", 150: "The owner disabled embedding for this video.",
-                    153: "YouTube refused the player (missing referrer). Open this page from a local web address, not as a file." };
-  dom.error.hidden = false;
-  dom.error.innerHTML = "";
-  const p = document.createElement("div");
-  p.innerHTML = `${reasons[e.data] || "Playback error."}<br><br>
-    <a href="https://www.youtube.com/watch?v=${VIDEO_ID}" target="_blank" rel="noopener">Open on YouTube ↗</a>`;
-  dom.error.appendChild(p);
-}
+video.src = VIDEO_SRC;
+video.addEventListener("loadedmetadata", onReady);
+video.addEventListener("error", onError);
+video.addEventListener("play", tick);
+video.addEventListener("pause", tick);
+video.addEventListener("seeked", tick);
+video.addEventListener("ended", () => { clearBanner(); highlightRow(null); tick(); });
+if (video.readyState >= 1) onReady();
 
 
 /* ---------- SECTION 10: EVENT WIRING ---------- */
@@ -481,7 +387,7 @@ dom.shield.addEventListener("click", togglePlay);
 // Seek bar: seek on release; captions resolve from the new timestamp on the next tick
 dom.seek.addEventListener("input", () => { seeking = true; dom.timeNow.textContent = fmt(dom.seek.value); });
 dom.seek.addEventListener("change", () => {
-  if (playerReady) { stopPreviewAndClear(); player.seekTo(parseFloat(dom.seek.value), true); }
+  if (playerReady) { stopPreviewAndClear(); video.currentTime = parseFloat(dom.seek.value); }
   seeking = false;
   setTimeout(tick, 150);
 });
@@ -506,5 +412,4 @@ document.addEventListener("keydown", (e) => {
 // Stop a focused button from also triggering on Space (we handle Space globally)
 document.addEventListener("keyup", (e) => { if (e.key === " " && e.target.tagName === "BUTTON") e.preventDefault(); });
 
-mountSharpPoster();
 buildAdminTable();
